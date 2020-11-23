@@ -10,6 +10,10 @@ exports.send400 = function(res) {
     return res.status(400).json({message: "Bad request occurred"});
 };
 
+exports.sendCustom400 = function(res, errors, message) {
+    return res.status(400).json({errors, message})
+}
+
 exports.send404 = function(res) {
-    return res.status(404).json({message: "Resourse not found"});
+    return res.status(404).json({message: "Resource not found"});
 }
