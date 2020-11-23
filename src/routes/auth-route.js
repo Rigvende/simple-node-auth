@@ -1,14 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth-controller.js');
-const {check} = require('express-validator');
+const {loginChecks} = require('../validation.js');
 
-// '/' route
-
-const loginChecks = [
-    check('email', 'Invalid email').isEmail().isLength({min: 10, max: 255}),
-    check('password', 'Invalid passport length').isLength({ min: 3, max: 20 })
-];
+// route: '/'
 
 router.get("/", authController.getLoginPage);
 
