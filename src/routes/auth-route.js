@@ -12,7 +12,7 @@ const loginChecks = [
 
 router.get("/", authController.getLoginPage);
 
-router.get("/register", authController.register);
+router.get("/register", authController.getRegisterPage);
 
 router.post("/auth", loginChecks, authController.login);
 

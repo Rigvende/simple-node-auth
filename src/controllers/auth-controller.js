@@ -6,7 +6,7 @@ exports.getLoginPage = function (req, res) {
     res.render("index.hbs");
 };
 
-exports.register = function (req, res) {
+exports.getRegisterPage = function (req, res) {
     res.render("register.hbs");
 };
 
