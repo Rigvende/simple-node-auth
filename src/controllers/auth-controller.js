@@ -9,7 +9,9 @@ exports.register = function (req, res) {
 };
 
 exports.login = function (req, res) {
-    if (!req.body) return res.sendStatus(400);
+    if (!req.body) {
+        return res.sendStatus(400);
+    }
 
     const useremail = req.body.email;
     const userpassword = req.body.password;
@@ -18,7 +20,7 @@ exports.login = function (req, res) {
             if (data.length > 0) {
                 res.redirect("/users");
             } else {
-                throw new Error("Wrong email/password");
+                res.status(401).send(`${res.statusCode}: Wrong email/password`);
             }
         }).catch(err => console.log(err));
 };

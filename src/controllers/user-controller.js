@@ -9,7 +9,9 @@ exports.findAll = function (req, res) {
 };
 
 exports.add = function (req, res) {
-    if (!req.body) return res.sendStatus(400);
+    if (!req.body) {
+        return res.sendStatus(400);
+    }
 
     const username = req.body.name;
     const userage = req.body.age;
@@ -40,7 +42,9 @@ exports.findById = function (req, res) {
 };
 
 exports.edit = function (req, res) {
-    if (!req.body) return res.sendStatus(400);
+    if (!req.body) {
+        return res.sendStatus(400);
+    }
 
     const username = req.body.name;
     const userage = req.body.age;
