@@ -13,8 +13,7 @@
 
 <body>
     <h1>Edit</h1>
-    <form action="/edit" method="POST">
-        <input type="hidden" name="id" value="{{user.id}}" />
+    <form action="/users/{{user.id}}/edit" method="POST">
         <label>Name</label><br>
         <input name="name" value="{{user.name}}" class="field" /><br><br>
         <label>Age</label><br>
@@ -25,6 +24,6 @@
         <input name="password" value="{{user.password}}" type="password" class="field" /><br><br>
         <input type="submit" value="Отправить" />
     </form>
-    <a href="/">Back to users</a>
+    <a href="/users">Back to users</a>
 </body>
 <html>

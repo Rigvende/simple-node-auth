@@ -3,7 +3,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
-const indexRouter = require('./src/routes/index');
+const userRouter = require('./src/routes/user-route');
+const authRouter = require('./src/routes/auth-route');
 const sequelize = require('./src/db-config')
 
 const app = express();
@@ -16,10 +17,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', indexRouter);
+app.use('/', authRouter);
+app.use('/users', userRouter);
 
-sequelize.sync().then(() => {
-    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-}).catch(err => console.log(err));
+sequelize.sync()
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    }).catch(err => {
+        console.log(err);
+        process.exit(1);
+    });
 
 module.exports = app;
