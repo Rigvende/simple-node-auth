@@ -1,4 +1,4 @@
-const app = require('../../app');
+const app = require('../app');
 const createError = require('http-errors');
 
 // catch 404 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit</title>
+    <meta charset="utf-8" />
+    <style>
+        .field {
+            width: 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Edit</h1>
+    <form action="/edit" method="POST">
+        <input type="hidden" name="id" value="{{user.id}}" />
+        <label>Name</label><br>
+        <input name="name" value="{{user.name}}" class="field" /><br><br>
+        <label>Age</label><br>
+        <input name="age" type="number" min="1" max="110" value="{{user.age}}" class="field" /><br><br>
+        <label>Email</label><br>
+        <input name="email" value="{{user.email}}" class="field" /><br><br>
+        <label>Password</label><br>
+        <input name="password" value="{{user.password}}" type="password" class="field" /><br><br>
+        <input type="submit" value="Отправить" />
+    </form>
+    <a href="/">Back to users</a>
+</body>
+<html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registration</title>
+    <meta charset="utf-8" />
+    <style>
+        .field {
+            width: 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Registration</h1>
+    <form method="POST" action="/create">
+        <label>Name</label><br>
+        <input name="name" type="text" class="field" /><br><br>
+        <label>Age</label><br>
+        <input name="age" type="number" class="field" min="1" max="110" /><br><br>
+        <label>Email</label><br>
+        <input name="email" type="email" class="field" /><br><br>
+        <label>Password</label><br>
+        <input name="password" type="password" class="field" /><br><br>
+        <input type="submit" value="Send" />
+    </form>
+    <a href="/">Back to users</a>
+</body>
+<html>
