@@ -4,22 +4,19 @@
 <head>
     <title>Edit</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../public/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
 <body>
+    <nav><a href="/">Login</a> | <a href="/users">Users</a> | <a href="/register">Add user</a></nav>
     <h1>Edit</h1>
+    
     <form action="/users/{{user.id}}/edit" method="POST">
         <label>Name</label><br>
         <input name="name" value="{{user.name}}" class="field" /><br><br>
         <label>Age</label><br>
         <input name="age" type="number" min="1" max="110" value="{{user.age}}" class="field" /><br><br>
-        <label>Email</label><br>
-        <input name="email" value="{{user.email}}" class="field" /><br><br>
-        <label>Password</label><br>
-        <input name="password" value="{{user.password}}" type="password" class="field" /><br><br>
-        <input type="submit" value="Save" />
+        <input type="submit" value="Save" class="link-button" />
     </form>
-    <a href="/users">Back to users</a>
 </body>
 <html>

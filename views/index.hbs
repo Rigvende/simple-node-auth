@@ -4,18 +4,20 @@
 <head>
     <title>Welcome</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../public/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
 <body>
-    <p><a href="/register">Register</a></p>
+    <nav><a href="/">Login</a> | <a href="/users">Users</a> | <a href="/register">Add user</a></nav>
     <h1>Welcome</h1>
+    
     <form method="POST" action="/auth">
         <label>Email</label><br>
-        <input name="email" type="email" class="field" /><br><br>
+        <input name="email" type="email" class="field" placeholder="Enter email.." /><br><br>
         <label>Password</label><br>
-        <input name="password" type="password" class="field" /><br><br>
-        <input type="submit" value="Log in" />
+        <input name="password" type="password" class="field" placeholder="Enter password.." /><br><br>
+        <input type="submit" value="Log in" class="link-button"/>
+        <a class="link-button" href="/register">Register</a>
     </form>
 </body>
 <html>

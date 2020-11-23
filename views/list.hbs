@@ -4,9 +4,11 @@
 <head>
     <title>Users</title>
     <meta charset="utf-8" />
+     <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
 <body>
+    <nav><a href="/">Login</a> | <a href="/users">Users</a> | <a href="/register">Add user</a></nav>
     <h1>Users</h1>
         
     <table>
@@ -20,15 +22,13 @@
             <td>{{this.name}}</td>
             <td>{{this.age}}</td>
             <td>
-                <a type="button" href="/users/{{this.id}}">Edit</a>|
+                <a class="link-button" href="/users/{{this.id}}">Edit</a>
                 <form action="/users/{{this.id}}/delete" method="POST" style="display:inline;">
-                    <input type="submit" value="Delete" />
+                    <input class="link-button" type="submit" value="Delete" />
                 </form>
             </td>
         </tr>
         {{/each}}
     </table>
-
-     <a href="/">Start page</a>
 </body>
 <html>

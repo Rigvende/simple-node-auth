@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const userRouter = require('./src/routes/user-route');
 const authRouter = require('./src/routes/auth-route');
-const sequelize = require('./src/db-config')
+const sequelize = require('./src/db-config');
+const handler = require('./src/error-handler.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', authRouter);
 app.use('/users', userRouter);
 app.use(function (req, res, next) {
-    res.status(404).send("Not Found")
+    handler.send404(res);
 });
 
 sequelize.sync()

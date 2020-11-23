@@ -4,11 +4,13 @@
 <head>
     <title>Registration</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../public/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
 <body>
+    <nav><a href="/">Login</a> | <a href="/users">Users</a> | <a href="/register">Add user</a></nav>
     <h1>Registration</h1>
+
     <form method="POST" action="/users">
         <label>Name</label><br>
         <input name="name" type="text" class="field" /><br><br>
@@ -20,6 +22,5 @@
         <input name="password" type="password" class="field" /><br><br>
         <input type="submit" value="Send" />
     </form>
-    <a href="/users">Back to users</a>
 </body>
 <html>

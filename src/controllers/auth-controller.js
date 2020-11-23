@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const handler = require('../error-handler.js');
 
 exports.getLoginPage = function (req, res) {
     res.render("index.hbs");
@@ -10,17 +11,17 @@ exports.register = function (req, res) {
 
 exports.login = function (req, res) {
     if (!req.body) {
-        return res.sendStatus(400);
+        handler.send400(res);
     }
 
-    const useremail = req.body.email;
-    const userpassword = req.body.password;
-    User.findAll({ where: { email: useremail, password: userpassword }, raw: true })
+    const {email, password} = req.body;
+
+    User.findAll({ where: { email: email, password: password }, raw: true })
         .then((data) => {
             if (data.length > 0) {
                 res.redirect("/users");
             } else {
-                res.status(401).send(`${res.statusCode}: Wrong email/password`);
+                handler.send401(res);
             }
-        }).catch(err => console.log(err));
+        }).catch(err => handler.send500(res, err));
 };

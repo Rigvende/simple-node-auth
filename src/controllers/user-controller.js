@@ -1,32 +1,37 @@
 const User = require('../models/User');
+const handler = require('../error-handler.js');
+const bcrypt = require('bcryptjs');
 
 exports.findAll = function (req, res) {
     User.findAll({ order: [['id', 'ASC']], raw: true }).then(data => {
         res.render("list.hbs", {
             users: data
         });
-    }).catch(err => console.log(err));
+    }).catch(err => handler.send500(res, err));
 };
 
 exports.add = function (req, res) {
     if (!req.body) {
-        return res.sendStatus(400);
+        handler.send400(res);
     }
 
-    const username = req.body.name;
-    const userage = req.body.age;
-    const useremail = req.body.email;
-    const userpassword = req.body.password;
+    const { name, age, email, password } = req.body;
 
-    User.create({
-        name: username,
-        age: userage,
-        email: useremail,
-        password: userpassword
-    })
-        .then(() => {
-            res.redirect("/");
-        }).catch(err => console.log(err));
+    User.findAll({ where: { email: email }, raw: true })
+        .then(async (data) => {
+            if (data.length > 0) {
+                return res.status(400).json({ message: "User with such email has already existed!" })
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 13);
+
+            User.create({ name, age, email, password: hashedPassword })
+                .then(() => {
+                    res.redirect("/");
+                });
+        })
+        .catch(err => handler.send500(res, err));
+
 };
 
 exports.findById = function (req, res) {
@@ -38,7 +43,7 @@ exports.findById = function (req, res) {
                 user: data[0]
             });
         })
-        .catch(err => console.log(err));
+        .catch(err => handler.send500(res, err));
 };
 
 exports.edit = function (req, res) {
@@ -46,23 +51,16 @@ exports.edit = function (req, res) {
         return res.sendStatus(400);
     }
 
-    const username = req.body.name;
-    const userage = req.body.age;
-    const useremail = req.body.email;
-    const userpassword = req.body.password;
+    const { name, age } = req.body;
     const userid = req.params.id;
 
-    User.update({
-        name: username,
-        age: userage,
-        email: useremail,
-        password: userpassword
-    },
+    User.update({ name, age },
         { where: { id: userid } })
         .then(() => {
             res.redirect("/users");
         })
-        .catch(err => console.log(err));
+        .catch(err => handler.send500(res, err));
+
 };
 
 exports.delete = function (req, res) {
@@ -70,5 +68,5 @@ exports.delete = function (req, res) {
 
     User.destroy({ where: { id: userid } }).then(() => {
         res.redirect("/users");
-    }).catch(err => console.log(err));
+    }).catch(err => handler.send500(res, err));
 };
