@@ -1,41 +1,30 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require('dotenv').config();
+const express = require('express');
+const logger = require('morgan');
+const userRouter = require('./src/routes/userRoute');
+const authRouter = require('./src/routes/authRoute');
+const sequelize = require('./src/dbConfig');
+const handler = require('./src/responseCodesHandler.js');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', authRouter);
+app.use('/users', userRouter);
+app.use((req, res, next) => handler.send404(res));
+app.use(send200 = (res, data) => handler.send200(res, data));
+app.use(send201 = (res, data, message) => handler.send201(res, data, message));
+app.use(send400 = (res, errors, message) => handler.send400(res, errors, message));
+app.use(send401 = res => handler.send401(res));
+app.use(send500 = res => handler.send500(res));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+sequelize.sync()
+    .then(() => app.listen(PORT, () => console.log(`Server started on port ${PORT}`)))
+    .catch(err => {
+        console.log(err);
+        process.exit(1);
+    });
 
 module.exports = app;
