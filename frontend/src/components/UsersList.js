@@ -1,12 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { useHttp } from '../utils/http.hook';
 import { useMessage } from '../utils/message.hook';
-import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 export const UsersList = ({ users }) => {
-    const history = useHistory();
     const { token } = useContext(AuthContext);
     const { request, error, clearError } = useHttp();
     const message = useMessage();
