@@ -3,12 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app.js",
+    "start": "node app.js",
     "server": "nodemon app.js",
     "frontend": "npm run start --prefix frontend",
     "frontend:install": "npm install --prefix frontend",
     "frontend:build": "npm run build --prefix frontend",
-    "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run frontend\""
+    "dev": "concurrently \"npm run server\" \"npm run frontend\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -25,7 +25,6 @@
     "sequelize": "^6.3.5"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
     "nodemon": "^2.0.6"
   }
 }
