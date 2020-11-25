@@ -5,9 +5,18 @@ const userRouter = require('./src/routes/userRoute');
 const authRouter = require('./src/routes/authRoute');
 const sequelize = require('./src/dbConfig');
 const handler = require('./src/responseCodesHandler.js');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV;
+
+if (NODE_ENV === 'production') {
+    app.use('/', express.static(path.join(__dirname, 'frontend', 'build')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 app.use(logger('dev'));
 app.use(express.json({ extended: true}));
