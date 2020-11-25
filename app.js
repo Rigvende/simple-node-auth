@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json({ extended: true}));
 app.use('/', authRouter);
 app.use('/users', userRouter);
 app.use((req, res, next) => handler.send404(res));

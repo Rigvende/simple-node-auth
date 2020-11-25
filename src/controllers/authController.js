@@ -9,6 +9,7 @@ exports.getMainPage = (req, res) =>
 
 exports.login = async (req, res) => {
     try {
+        console.log(req.body);
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {

@@ -1,8 +1,9 @@
 /node_modules
+/frontend/node_modules
 
 *.log
 
 .env
 
 .vscode
-frontend
+# frontend

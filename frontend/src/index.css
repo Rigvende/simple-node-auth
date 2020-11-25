@@ -1,0 +1,84 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+.btn {
+    margin-right: 10px;
+}
+
+.row {
+    margin-bottom: 0px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.card{
+    min-width: 240px;
+}
+
+.card-title {
+    margin-bottom: 30px!important;
+}
+
+.card-action {
+    margin-top: 15px!important;
+}
+
+nav .brand-logo {
+    padding-left: 20px;
+}
+
+@media only screen and (max-width: 992px) {
+nav .brand-logo {
+    padding-right: 20px;
+}}
+
+.input-field {
+    margin-bottom: 0px;
+}
+
+input.yellow-input {
+    border-bottom: 1px solid #fff!important;
+    box-shadow: 0 1px 0 0 #fff!important;
+}
+
+input.yellow-input:focus {
+    border-bottom: 1px solid orange!important;
+    box-shadow: 0 2px 0 0 orange!important;
+}
+
+.label-white {
+    color: #fff!important;
+    font-size: 16px!important;
+}
+
+.label-white:focus {
+    color: orange!important;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.button-link {
+    border: none;
+    display: inline-block;
+    padding: 5px 15px; /* Поля */
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+    margin: 0px 10px;
+    min-width: 50px;
+    height: 33px;
+    background-color: rgb(231, 232, 233);
+}
+
+.button-orange:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    background: linear-gradient(to bottom, #faf1e8, #ebd6b5); 
+}
+
+.button-blue:hover {
+    box-shadow: 0 0 5px rgba(0,0,0,0.3); 
+    background: linear-gradient(to bottom, #e8f3fa, #b7d1e6); 
+}
