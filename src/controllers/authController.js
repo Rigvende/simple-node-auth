@@ -4,8 +4,10 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const { JWT_SECRET, JWT_TIME, JWT_REFRESH_SECRET, JWT_REFRESH_TIME } = process.env;
+
 exports.getMainPage = (req, res) =>
-    res.send(`<h1>Hello from authentication-trainee!</h1>`);
+    res.send(`<h1>Hello from Simple-Node-Auth!</h1>`);
 
 exports.login = async (req, res) => {
     try {
@@ -13,21 +15,25 @@ exports.login = async (req, res) => {
 
         if (errors.length > 0) {
             send400(res, errors, "Incorrect login data");
-        } else {
-            const { email, password } = req.body;
+        } else {          
+            const { email, password } = req.body;          
             const user = await User.findOne({ where: { email } });
+                
             if (user) {
+                const { id } = user;
                 const isMatch = await bcrypt.compare(password, user.password);
+         
                 if (!isMatch) {
-                    send401(res);
+                    send401(res, "Invalid email/password");
                 }
 
-                const { id } = user;
-                const { JWT_SECRET } = process.env;
-                const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '1h' });
-                res.json({ token, id, message: `User ${id} successfully logged in` });
+                const refreshToken = jwt.sign({ id }, JWT_REFRESH_SECRET, { expiresIn: +JWT_REFRESH_TIME });
+                await User.update({ token: refreshToken }, { where: { id} });
+           
+                const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: +JWT_TIME });
+                res.json({ token, id });          
             } else {
-                send401(res);
+                send401(res, "Invalid email/password");
             }
         }
     } catch (err) {

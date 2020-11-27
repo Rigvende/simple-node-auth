@@ -10,12 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json({ extended: true}));
 app.use('/', authRouter);
 app.use('/users', userRouter);
 app.use((req, res, next) => handler.send404(res));
 app.use(send200 = (res, data) => handler.send200(res, data));
-app.use(send201 = (res, data, message) => handler.send201(res, data, message));
+app.use(send201 = (res, data) => handler.send201(res, data));
 app.use(send400 = (res, errors, message) => handler.send400(res, errors, message));
 app.use(send401 = res => handler.send401(res));
 app.use(send500 = res => handler.send500(res));

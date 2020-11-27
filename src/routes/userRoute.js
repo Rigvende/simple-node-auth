@@ -2,17 +2,18 @@ const express = require('express');
 const router = express.Router(); 
 const userController = require('../controllers/userController.js');
 const validation = require('../validation/userValidation.js');
+const auth = require('../middleware/auth.middleware');
 
 // route: '/users'
 
-router.get("/", userController.getAll);
-
 router.post("/", validation.registrationValidation, userController.create);
 
-router.get("/:id", userController.findById);
+router.get("/", auth, userController.getAll);
 
-router.patch("/:id", validation.updateValidation, userController.update);
+router.get("/:id", auth, userController.findById);
 
-router.delete("/:id", userController.delete);
+router.patch("/:id", auth, validation.updateValidation, userController.update);
+
+router.delete("/:id", auth, userController.delete);
 
 module.exports = router;
