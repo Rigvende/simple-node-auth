@@ -5,7 +5,7 @@ const userRouter = require('./src/routes/userRoute');
 const authRouter = require('./src/routes/authRoute');
 const sequelize = require('./src/dbConfig');
 const handler = require('./src/responseCodesHandler.js');
-// const cors = require('cors');
+const cors = require('cors');
 const winston = require('winston');
 
 const app = express();
@@ -29,25 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(morgan('dev'));
 app.use(express.json({ extended: true }));
-// app.use(cors());
-app.use(function (req, res, next) {
-    var origins = [
-        'https://simplenodeauth.herokuapp.com',
-        'https://www.simplenodeauth.herokuapp.com'
-    ];
-
-    for(var i = 0; i < origins.length; i++){
-        var origin = origins[i];
-
-        if(req.headers.origin.indexOf(origin) > -1){
-            res.header('Access-Control-Allow-Origin', req.headers.origin);
-        }
-    }
-    
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+app.use(cors());
 app.use('/', authRouter);
 app.use('/users', userRouter);
 app.use((req, res, next) => handler.send404(res));
