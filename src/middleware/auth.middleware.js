@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
                 req.user = verified;
                 next();
             } catch (err) {
-                res.send401(res, "Authorization expired");
+                send401(res, "Authorization expired");
             }
         } else {
 
@@ -36,10 +36,10 @@ module.exports = async (req, res, next) => {
                 req.user = verified;
                 next();
             } catch (err) {
-                res.send401(res, "Authorization expired");
+                send401(res, "Authorization expired");
             }
         }
     } catch (err) {
-        res.send401(res);
+        send401(res);
     }
 };
