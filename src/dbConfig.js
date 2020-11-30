@@ -10,9 +10,9 @@ const Sequelize = require("sequelize");
 */
 
 //for heroku:
-const { DATABASE_ENV, DB_DIALECT } = process.env;
+const { DATABASE_URL, DB_DIALECT } = process.env;
 
-const sequelize = new Sequelize(DATABASE_ENV, {
+const sequelize = new Sequelize(DATABASE_URL, {
   dialect: DB_DIALECT,
   dialectOptions: { ssl: true },
   query: { raw: true },
