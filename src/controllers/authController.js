@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
-            return res.send400(res, errors, "Incorrect login data");
+            return res.send400(res, errors, "Incorrect login data")
         }
 
         const user = await User.findOne({ where: { email } });
@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
         await User.update({ token: refreshToken }, { where: { id } });
         return res.json({ token, id });          
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.send500(res);
     }
 };
