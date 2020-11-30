@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
             throw new Error();
         }
 
-        const { JWT_SECRET, JWT_TIME } = process.env;
+        const { JWT_SECRET, JWT_TIME, JWT_REFRESH_SECRET } = process.env;
         const decoded = jwt.decode(token, JWT_SECRET);
         
         if (Date.now() >= decoded.exp * 1000) {
@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
             const refreshToken = user.token;
             
             try {
-                const verified = jwt.verify(refreshToken, JWT_SECRET);
+                const verified = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
                 const newToken = jwt.sign({ id: decoded.id }, JWT_SECRET, { expiresIn: Number(JWT_TIME) });
                 
                 req.refresh = { token: newToken, id: decoded.id };
