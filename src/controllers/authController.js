@@ -3,7 +3,7 @@ const User = require('../models/User');
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { info } = require('../logger');
+const { logger } = require('../logger');
 
 const { JWT_SECRET, JWT_TIME, JWT_REFRESH_SECRET, JWT_REFRESH_TIME } = process.env;
 
@@ -18,9 +18,9 @@ exports.login = async (req, res) => {
             send400(res, errors, "Incorrect login data");
         } else {          
             const { email, password } = req.body;      
-            info("Body: " + req.body);   
+            logger.info("Body: " + req.body);   
             const user = await User.findOne({ where: { email } });
-            info(user);
+            logger.info(user);
                 
             if (user) {
                 const { id } = user;

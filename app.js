@@ -7,7 +7,6 @@ const sequelize = require('./src/dbConfig');
 const handler = require('./src/responseCodesHandler.js');
 const cors = require('cors');
 const logger = require('./src/logger');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -22,7 +21,6 @@ app.use(send201 = (res, data) => handler.send201(res, data));
 app.use(send400 = (res, errors, message) => handler.send400(res, errors, message));
 app.use(send401 = res => handler.send401(res));
 app.use(send500 = res => handler.send500(res));
-app.use(info = (message) => logger.info(message));
 
 sequelize.sync()
     .then(() => app.listen(PORT, () => logger.info(`Server started on port ${PORT}`)))
