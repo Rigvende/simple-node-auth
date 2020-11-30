@@ -14,10 +14,10 @@ const { DATABASE_URL } = process.env;
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialect: "postgres",
-  ssl: {
-    require: true,
-    rejectUnauthorized: false 
-  },
+  dialectOptions: { ssl: {
+    ssl: true,
+    rejectUnauthorized: false
+  } },
   query: { raw: true },
 });
 
