@@ -16,10 +16,8 @@ const sequelize = new Sequelize(DATABASE_URL, {
     dialect: "postgres",
     dialectOptions: {
         ssl: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
+            require: true,
+            rejectUnauthorized: false
         }
     },
     query: { raw: true },
