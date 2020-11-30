@@ -6,26 +6,10 @@ const authRouter = require('./src/routes/authRoute');
 const sequelize = require('./src/dbConfig');
 const handler = require('./src/responseCodesHandler.js');
 const cors = require('cors');
-const winston = require('winston');
+const logger = require('./src/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    defaultMeta: { service: 'user-service' },
-    transports: [
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' }),
-    ],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
-        format: winston.format.simple(),
-    }));
-}
 
 app.use(morgan('dev'));
 app.use(express.json({ extended: true }));
@@ -38,11 +22,12 @@ app.use(send201 = (res, data) => handler.send201(res, data));
 app.use(send400 = (res, errors, message) => handler.send400(res, errors, message));
 app.use(send401 = res => handler.send401(res));
 app.use(send500 = res => handler.send500(res));
+app.use(info = (message) => logger.info(message));
 
 sequelize.sync()
-    .then(() => app.listen(PORT, () => console.log(`Server started on port ${PORT}`)))
+    .then(() => app.listen(PORT, () => logger.info(`Server started on port ${PORT}`)))
     .catch(err => {
-        console.log(err);
+        logger.error(err);
         process.exit(1);
     });
 
