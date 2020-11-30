@@ -10,9 +10,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(logger('dev'));
-app.use(express.json({ extended: true}));
+app.use(express.json({ extended: true }));
 app.use('/', authRouter);
 app.use('/users', userRouter);
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 app.use((req, res, next) => handler.send404(res));
 app.use(send200 = (res, data) => handler.send200(res, data));
 app.use(send201 = (res, data) => handler.send201(res, data));
