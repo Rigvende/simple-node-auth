@@ -1,11 +1,12 @@
-exports.send500 = (res) => res.status(500).json({ message: "Something goes wrong..." });
+const addCustomResponses = (req, res, next) => {
+    res.send500 = () => res.status(500).json({ message: "Something goes wrong..." });
+    res.send401 = (message = "Authorization failed") => res.status(401).json({ message });
+    res.send400 = (errors, message) => res.status(400).json({ errors, message });
+    res.send404 = () => res.status(404).json({ message: "Resource not found" });
+    
+    res.send200 = data => res.status(200).json({ data });
+    res.send201 = data => res.status(201).json({ data });
+    return next();
+}
 
-exports.send401 = (res, message = "Authorization failed") => res.status(401).json({ message });
-
-exports.send400 = (res, errors, message) => res.status(400).json({ errors, message });
-
-exports.send404 = res => res.status(404).json({ message: "Resource not found" });
-
-exports.send200 = (res, data) => res.status(200).json({ data });
-
-exports.send201 = (res, data) => res.status(201).json({ data });
+module.exports = { addCustomResponses }
