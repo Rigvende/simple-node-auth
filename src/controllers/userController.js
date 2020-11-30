@@ -5,9 +5,9 @@ const { validationResult } = require('express-validator');
 exports.getAll = async (req, res) => {
     try {
         const users = await User.findAll({ order: [['id', 'ASC']] });
-        send200(res, { users, refresh: req.refresh });
+        res.send200({ users, refresh: req.refresh });
     } catch (err) {
-        send500(res);
+        res.send500();
     }
 };
 
@@ -16,23 +16,23 @@ exports.create = async (req, res) => {
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
-            send400(res, errors, "Incorrect registration data");
+            res.send400(errors, "Incorrect registration data");
         } else {
             const { name, age, email, password } = req.body;
 
             const foundUser = await User.findOne({ where: { email } });
             if (foundUser) {
-                send400(res, [], "User with such email has already existed!");
+                res.send400([], "User with such email has already existed!");
             }
 
             const hashedPassword = await bcrypt.hash(password, 13);
             const newUser = { name, age, email, password: hashedPassword };
 
             const { dataValues } = await User.create(newUser);
-            send201(res, dataValues);
+            res.send201(dataValues);
         }
     } catch (err) {
-        send500(res);
+        res.send500();
     }
 };
 
@@ -40,9 +40,9 @@ exports.findById = async (req, res) => {
     try {
         const { id } = req.params;
         const user = await User.findOne({ where: { id } });
-        send200(res, { user, refresh: req.refresh });
+        res.send200({ user, refresh: req.refresh });
     } catch (err) {
-        send500(res);
+        res.send500();
     }
 };
 
@@ -51,16 +51,16 @@ exports.update = async (req, res) => {
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
-            send400(res, errors, "Incorrect edit data");
+            res.send400(errors, "Incorrect edit data");
         } else {
             const { name, age } = req.body;
             const { id } = req.params;
 
             await User.update({ name, age }, { where: { id } });
-            send200(res, { refresh: req.refresh });
+            res.send200({ refresh: req.refresh });
         }
     } catch (err) {
-        send500(res);
+        res.send500();
     }
 };
 
@@ -70,12 +70,12 @@ exports.delete = async (req, res) => {
         const current = req.user.id;
     
         if (Number(id) === Number(current)) {
-            send400(res, null, 'User cannot delete himself');
+            res.send400(null, 'User cannot delete himself');
         } else {
             await User.destroy({ where: { id } });
-            send200(res, { refresh: req.refresh });
+            res.send200({ refresh: req.refresh });
         }
     } catch (err) {
-        send500(res);
+        send500();
     }
 };
