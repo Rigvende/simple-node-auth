@@ -15,20 +15,20 @@ exports.login = async (req, res) => {
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
-            return res.send400(res, errors, "Incorrect login data")
+            return res.send400(errors, "Incorrect login data")
         }
 
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            return res.send401(res, "Invalid email/password");
+            return res.send401("Invalid email/password");
         }
 
         const { id } = user;
         const isMatch = await bcrypt.compare(password, user.password);
     
         if (!isMatch) {
-            return res.send401(res, "Invalid email/password");
+            return res.send401("Invalid email/password");
         }
 
         const refreshToken = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REFRESH_TIME) });
@@ -37,6 +37,6 @@ exports.login = async (req, res) => {
         return res.json({ token, id });          
     } catch (err) {
         console.log(err);
-        res.send500(res);
+        res.send500();
     }
 };
