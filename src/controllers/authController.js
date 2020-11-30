@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
 
         const refreshToken = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REFRESH_TIME) });
         const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_TIME) });
-        
+
         await User.update({ token: refreshToken }, { where: { id } });
         return res.json({ token, id });
     } catch (err) {
