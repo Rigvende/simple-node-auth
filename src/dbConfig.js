@@ -13,11 +13,14 @@ const Sequelize = require("sequelize");
 const { DATABASE_URL } = process.env;
 
 const sequelize = new Sequelize(DATABASE_URL, {
-  dialect: "postgres",
-  dialectOptions: { ssl: {
-    rejectUnauthorized: false
-  }},
-  query: { raw: true },
+    dialect: "postgres",
+    dialectOptions: {
+        ssl: {
+            ssl: true,
+            rejectUnauthorized: false
+        }
+    },
+    query: { raw: true },
 });
 
 module.exports = sequelize;

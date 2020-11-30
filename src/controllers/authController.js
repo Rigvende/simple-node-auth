@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
-            return res.send400(errors, "Incorrect login data")
+            res.send400(errors, "Incorrect login data")
         }
 
         const user = await User.findOne({ where: { email } });
