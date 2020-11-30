@@ -18,9 +18,9 @@ exports.login = async (req, res) => {
             send400(res, errors, "Incorrect login data");
         } else {          
             const { email, password } = req.body;      
-            logger.info("Body: " + req.body);   
+            console.log(`Body: ${JSON.stringify(req.body, null, 2)}`);
             const user = await User.findOne({ where: { email } });
-            logger.info(user);
+            console.log(`User: ${JSON.stringify(user, null, 2)}`);
                 
             if (user) {
                 const { id } = user;
