@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { logger } = require('../logger.js');
 
 module.exports = async (req, res, next) => {
     if (req.method === 'OPTIONS') {
@@ -7,27 +8,31 @@ module.exports = async (req, res, next) => {
     }
 
     try {
-        const token = req.headers.authorization.split(' ')[1];
+        const { authorization } = req.headers;
+        const token = authorization ? authorization.split(' ')[1] : null;
+
         if (!token) {
+            logger.warn("Token unrecognized");
             throw new Error();
-        }
+        }        
 
         const { JWT_SECRET, JWT_TIME } = process.env;
         const decoded = jwt.decode(token, JWT_SECRET);
         
         if (Date.now() >= decoded.exp * 1000) {
+            logger.warn("Token expired");
             const user = await User.findOne(({ where: { id: decoded.id } }));
             const refreshToken = user.token;
             
             try {
                 const verified = jwt.verify(refreshToken, JWT_SECRET);
                 const newToken = jwt.sign({ id: decoded.id }, JWT_SECRET, { expiresIn: JWT_TIME });
-                
+                logger.info("Token refreshed");
                 req.refresh = { token: newToken, id: decoded.id };
                 req.user = verified;
                 next();
             } catch (err) {
-                console.log(err);
+                logger.warn("Refresh token expired");
                 res.send401("Authorization expired");
             }
         } else {
@@ -36,12 +41,12 @@ module.exports = async (req, res, next) => {
                 req.user = verified;
                 next();
             } catch (err) {
-                console.log(err);
+                logger.error("Token damaged")
                 res.send401("Authorization expired");
             }
         }
     } catch (err) {
-        console.log(err);
+        logger.error("Authorization failed")
         res.send401();
     }
 };
