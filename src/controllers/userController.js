@@ -7,6 +7,7 @@ exports.getAll = async (req, res) => {
         const users = await User.findAll({ order: [['id', 'ASC']] });
         res.send200({ users, refresh: req.refresh });
     } catch (err) {
+        console.log(err);
         res.send500();
     }
 };
@@ -32,6 +33,7 @@ exports.create = async (req, res) => {
             res.send201(dataValues);
         }
     } catch (err) {
+        console.log(err);
         res.send500();
     }
 };
@@ -42,6 +44,7 @@ exports.findById = async (req, res) => {
         const user = await User.findOne({ where: { id } });
         res.send200({ user, refresh: req.refresh });
     } catch (err) {
+        console.log(err);
         res.send500();
     }
 };
@@ -60,6 +63,7 @@ exports.update = async (req, res) => {
             res.send200({ refresh: req.refresh });
         }
     } catch (err) {
+        console.log(err);
         res.send500();
     }
 };
@@ -76,6 +80,7 @@ exports.delete = async (req, res) => {
             res.send200({ refresh: req.refresh });
         }
     } catch (err) {
+        console.log(err);
         send500();
     }
 };

@@ -5,7 +5,7 @@ const addCustomResponses = (req, res, next) => {
   res.send404 = () => res.status(404).json({ message: "Resource not found" });
   res.send200 = data => res.status(200).json({ data });
   res.send201 = data => res.status(201).json({ data });
-  return next()
+  return next();
 }
 
 module.exports = {addCustomResponses}
