@@ -40,6 +40,6 @@ module.exports = async (req, res, next) => {
             }
         }
     } catch (err) {
-        res.send401();
+        res.send401(JSON.stringify(err));
     }
 };
