@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
         await User.update({ token: refreshToken }, { where: { id } });
         return res.json({ token, id });          
     } catch (err) {
-        logger.error("Authorization failed");
+        logger.error(`Authorization failed! ${err}`);
         res.send500();
     }
 };

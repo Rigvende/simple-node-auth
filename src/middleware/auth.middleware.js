@@ -46,7 +46,7 @@ module.exports = async (req, res, next) => {
             }
         }
     } catch (err) {
-        logger.error("Authorization failed")
+        logger.error(`Authorization failed! ${err}`)
         res.send401();
     }
 };

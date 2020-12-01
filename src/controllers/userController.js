@@ -8,7 +8,7 @@ exports.getAll = async (req, res) => {
         const users = await User.findAll({ order: [['id', 'ASC']] });
         res.send200({ users, refresh: req.refresh });
     } catch (err) {
-        logger.error("Cannot fetch users");
+        logger.error(`Cannot find users! ${err}`);
         res.send500();
     }
 };
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
             res.send201(dataValues);
         }
     } catch (err) {
-        logger.error("Cannot create user");
+        logger.error(`Cannot create user! ${err}`);
         res.send500();
     }
 };
@@ -49,7 +49,7 @@ exports.findById = async (req, res) => {
         logger.info("User found");
         res.send200({ user, refresh: req.refresh });
     } catch (err) {
-        logger.error("Cannot find user");
+        logger.error(`Cannot find user! ${err}`);
         res.send500();
     }
 };
@@ -70,7 +70,7 @@ exports.update = async (req, res) => {
             res.send200({ refresh: req.refresh });
         }
     } catch (err) {
-        logger.error("Cannot update user");
+        logger.error(`Cannot update user! ${err}`);
         res.send500();
     }
 };
@@ -89,7 +89,7 @@ exports.delete = async (req, res) => {
             res.send200({ refresh: req.refresh });
         }
     } catch (err) {
-        logger.error("Cannot delete user");
+        logger.error(`Cannot delete user! ${err}`);
         send500();
     }
 };
