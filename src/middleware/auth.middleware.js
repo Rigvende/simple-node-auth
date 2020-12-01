@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     }
 
     try {
-        const token = req.headers.authorization.split(' ')[1];
+        const token = req.headers['Authorization'].split(' ')[1];
         if (!token) {
             throw new Error();
         }
@@ -27,19 +27,21 @@ module.exports = async (req, res, next) => {
                 req.user = verified;
                 next();
             } catch (err) {
+                console.log(err);
                 res.send401("Authorization expired");
             }
         } else {
-
             try {
                 const verified = jwt.verify(token, JWT_SECRET);
                 req.user = verified;
                 next();
             } catch (err) {
+                console.log(err);
                 res.send401("Authorization expired");
             }
         }
     } catch (err) {
-        res.send401(JSON.stringify(err));
+        console.log(err);
+        res.send401("aaa " + err.stack);
     }
 };
