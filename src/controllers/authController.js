@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { logger } = require('../logger.js');
+const { invalidateToken } = require('../tokensBlackList');
 
 const { JWT_SECRET, JWT_TIME, JWT_REFRESH_TIME } = process.env;
 
@@ -29,7 +30,7 @@ exports.login = async (req, res) => {
 
         const { id } = user;
         const isMatch = await bcrypt.compare(password, user.password);
-    
+
         if (!isMatch) {
             logger.warn("Invalid email/password");
             return res.send401("Invalid email/password");
@@ -39,9 +40,17 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_TIME) });
 
         await User.update({ token: refreshToken }, { where: { id } });
-        return res.json({ token, id });          
+        logger.info('Login successful');
+        return res.json({ token, id });
     } catch (err) {
         logger.error(`Authorization failed! ${err}`);
         res.send500();
     }
+};
+
+exports.logout = async (req, res) => {
+    const { token, user } = req;
+    invalidateToken(user.id, token);
+    logger.info('Logout successful');
+    res.send200();
 };

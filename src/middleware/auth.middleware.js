@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { logger } = require('../logger.js');
+const { checkToken } = require('../tokensBlackList');
 
 module.exports = async (req, res, next) => {
     if (req.method === 'OPTIONS') {
@@ -14,16 +15,23 @@ module.exports = async (req, res, next) => {
         if (!token) {
             logger.warn("Token unrecognized");
             throw new Error();
-        }        
+        }
 
         const { JWT_SECRET, JWT_TIME } = process.env;
         const decoded = jwt.decode(token, JWT_SECRET);
         
+        try {
+            checkToken(decoded.id, token, res);
+        } catch (err) {
+            logger.error(`Token found in blacklist` + err);
+            res.send401(`User credentials are in blacklist`);
+        };
+
         if (Date.now() >= decoded.exp * 1000) {
             logger.warn("Token expired");
             const user = await User.findOne(({ where: { id: decoded.id } }));
             const refreshToken = user.token;
-            
+
             try {
                 const verified = jwt.verify(refreshToken, JWT_SECRET);
                 const newToken = jwt.sign({ id: decoded.id }, JWT_SECRET, { expiresIn: JWT_TIME });
@@ -39,6 +47,7 @@ module.exports = async (req, res, next) => {
             try {
                 const verified = jwt.verify(token, JWT_SECRET);
                 req.user = verified;
+                req.token = token;
                 next();
             } catch (err) {
                 logger.error("Token damaged")
