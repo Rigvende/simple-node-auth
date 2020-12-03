@@ -16,15 +16,15 @@ exports.invalidateToken = (id, token) =>
         }
     });
 
-exports.checkToken = async (id, token, res) => {
-    client.getAsync(id)
+exports.checkToken = async (id, token) => {
+    return client.getAsync(id)
         .then(data => {
             if (data === token) {
-                throw new Error();
+                return false;
             }
+            return true;
         })
         .catch(err => {
-            logger.error(`Token found in blacklist! ${err}`);
-            res.send401("User credentials are in blacklist");
+            return false;
         });
 };

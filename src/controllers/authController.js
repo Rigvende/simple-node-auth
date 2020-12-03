@@ -18,7 +18,7 @@ exports.login = async (req, res) => {
 
         if (errors.length > 0) {
             logger.warn("Incorrect login data");
-            res.send400(errors, "Incorrect login data")
+            return res.send400(errors, "Incorrect login data")
         }
 
         const user = await User.findOne({ where: { email } });
@@ -44,7 +44,7 @@ exports.login = async (req, res) => {
         return res.json({ token, id });
     } catch (err) {
         logger.error(`Authorization failed! ${err}`);
-        res.send500();
+        return res.send500();
     }
 };
 
@@ -53,9 +53,9 @@ exports.logout = (req, res) => {
     try {
         invalidateToken(user.id, token);
         logger.info('Logout successful');
-        res.send200();
+        return res.send200();
     } catch (err) {
         logger.error(`Logout failed! ${err}`);
-        res.send500();
+        return res.send500();
     }
 };
