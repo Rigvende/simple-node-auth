@@ -48,10 +48,10 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
     const { token, user } = req;
     try {
-        invalidateToken(user.id, token);
+        await invalidateToken(user.id, token);
         logger.info('Logout successful');
         return res.send200();
     } catch (err) {
