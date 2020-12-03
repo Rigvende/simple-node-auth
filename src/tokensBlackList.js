@@ -2,7 +2,9 @@ const redis = require('redis');
 const { logger } = require('./logger.js');
 const bluebird = require('bluebird');
 
-const client = redis.createClient();
+// const client = redis.createClient(); //for localhost
+const client = redis.createClient(process.env.REDIS_URL); //for heroku
+
 client.on("connect", () => {
     logger.info("Redis is now connected");
     bluebird.promisifyAll(redis);
@@ -15,7 +17,7 @@ exports.invalidateToken = (id, token) =>
             throw err;
         }
     });
-
+       
 exports.checkToken = async (id, token) => {
     return client.getAsync(id)
         .then(data => {

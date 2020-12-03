@@ -21,7 +21,6 @@ module.exports = async (req, res, next) => {
         const decoded = jwt.decode(token, JWT_SECRET);
 
         const valid = await checkToken(decoded.id, token, res);
-        console.log(valid)
         if (!valid) {
             logger.error(`Token found in blacklist!`);
             return res.send401("Current user credentials are in blacklist");
