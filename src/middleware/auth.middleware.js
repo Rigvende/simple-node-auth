@@ -19,13 +19,8 @@ module.exports = async (req, res, next) => {
 
         const { JWT_SECRET, JWT_TIME } = process.env;
         const decoded = jwt.decode(token, JWT_SECRET);
-        
-        try {
-            checkToken(decoded.id, token, res);
-        } catch (err) {
-            logger.error(`Token found in blacklist` + err);
-            res.send401(`User credentials are in blacklist`);
-        };
+
+        checkToken(decoded.id, token, res);
 
         if (Date.now() >= decoded.exp * 1000) {
             logger.warn("Token expired");

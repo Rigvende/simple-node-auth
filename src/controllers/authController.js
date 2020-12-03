@@ -48,9 +48,14 @@ exports.login = async (req, res) => {
     }
 };
 
-exports.logout = async (req, res) => {
+exports.logout = (req, res) => {
     const { token, user } = req;
-    invalidateToken(user.id, token);
-    logger.info('Logout successful');
-    res.send200();
+    try {
+        invalidateToken(user.id, token);
+        logger.info('Logout successful');
+        res.send200();
+    } catch (err) {
+        logger.error(`Logout failed! ${err}`);
+        res.send500();
+    }
 };
