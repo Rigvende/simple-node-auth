@@ -51,7 +51,12 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
     const { token, user } = req;
     try {
-        await invalidateToken(user.id, token);
+        const checkedUser = await User.findOne(({ where: { id: user.id } }));
+        const refreshToken = checkedUser.token;
+        const decoded = jwt.decode(refreshToken, JWT_SECRET);
+        const time = parseInt((decoded.exp * 1000 - Date.now()) / 1000);
+   
+        await invalidateToken(user.id, token, time);
         logger.info('Logout successful');
         return res.send200();
     } catch (err) {

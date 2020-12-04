@@ -27,8 +27,7 @@ module.exports = async (req, res, next) => {
                 return res.send401("Current credentials are in blacklist");
             }
         } catch (err) {
-            logger.error('Cannot check credeintials');
-            return res.send500();
+            logger.error(`Cannot check credeintials. Turn on the unsafe mode! ${err}`);
         }
 
         if (Date.now() >= decoded.exp * 1000) {
