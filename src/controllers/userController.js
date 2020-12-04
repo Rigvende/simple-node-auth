@@ -6,12 +6,14 @@ const { logger } = require('../logger.js');
 exports.getAll = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
+        logger.info(page);
         const pageSize = 5;
         const users = await User.findAll({
             order: [['id', 'ASC']],
             limit: pageSize,
             offset: (page - 1) * pageSize
         });
+        logger.info(users);
         res.send200({ users, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
