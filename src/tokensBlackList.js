@@ -1,9 +1,11 @@
 const redis = require('redis');
 const { logger } = require('./logger.js');
 const bluebird = require('bluebird');
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// const client = redis.createClient(); //for localhost
-const client = redis.createClient(process.env.REDIS_URL); //for heroku
+const client = NODE_ENV === 'development'
+    ? redis.createClient()
+    : redis.createClient(process.env.REDIS_URL);
 
 client.on("connect", () => {
     logger.info("Redis is now connected");

@@ -20,11 +20,16 @@ module.exports = async (req, res, next) => {
         const { JWT_SECRET, JWT_TIME } = process.env;
         const decoded = jwt.decode(token, JWT_SECRET);
 
-        const valid = await checkToken(decoded.id, token, res);
-        if (!valid) {
-            logger.error(`Token found in blacklist!`);
-            return res.send401("Current user credentials are in blacklist");
-        } 
+        try {
+            const valid = await checkToken(decoded.id, token, res);
+            if (!valid) {
+                logger.error(`Token found in blacklist!`);
+                return res.send401("Current credentials are in blacklist");
+            }
+        } catch (err) {
+            logger.error('Cannot check credeintials');
+            return res.send500();
+        }
 
         if (Date.now() >= decoded.exp * 1000) {
             const user = await User.findOne(({ where: { id: decoded.id } }));
@@ -52,7 +57,7 @@ module.exports = async (req, res, next) => {
             logger.error("Token damaged")
             return res.send401("Authorization expired");
         }
-    
+
     } catch (err) {
         logger.error(`Authorization failed! ${err}`)
         return res.send401();

@@ -20,7 +20,8 @@ app.use('/', authRouter);
 app.use('/users', userRouter);
 
 sequelize.sync()
-    .then(() => app.listen(PORT, () => logger.info(`Server started on port ${PORT}`)))
+    .then(() => app.listen(PORT, () =>
+        logger.info(`Server started on port ${PORT}, mode: ${app.get('env')}`)))
     .catch(err => {
         logger.error(err);
         process.exit(1);
