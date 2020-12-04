@@ -2,16 +2,17 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
-const paginate = require('jw-paginate');
 
 exports.getAll = async (req, res) => {
     try {
-        const users = await User.findAll({ order: [['id', 'ASC']] });
         const page = parseInt(req.query.page) || 1;
         const pageSize = 5;
-        const pager = paginate(users.length, page, pageSize);
-        const pageOfItems = users.slice(pager.startIndex, pager.endIndex + 1);
-        res.send200({ users: pageOfItems, pager, refresh: req.refresh });
+        const users = await User.findAll({
+            order: [['id', 'ASC']],
+            limit: [[pageSize]],
+            offset: [[(page - 1) * pageSize]]
+        });
+        res.send200({ users, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
         res.send500();
