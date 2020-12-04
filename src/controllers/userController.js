@@ -2,11 +2,16 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
+require('jw-paginate');
 
 exports.getAll = async (req, res) => {
     try {
         const users = await User.findAll({ order: [['id', 'ASC']] });
-        res.send200({ users, refresh: req.refresh });
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = 5;
+        const pager = paginate(users.length, page, pageSize);
+        const pageOfItems = users.slice(pager.startIndex, pager.endIndex + 1);
+        res.send200({ users: pageOfItems, pager, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
         res.send500();
@@ -79,7 +84,7 @@ exports.delete = async (req, res) => {
     try {
         const { id } = req.params;
         const current = req.user.id;
-    
+
         if (Number(id) === Number(current)) {
             logger.warn("Attempt to delete himself");
             res.send400(null, 'User cannot delete himself');
