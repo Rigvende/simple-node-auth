@@ -12,7 +12,7 @@ exports.getAll = async (req, res) => {
         const count = await User.findAll({
             attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'count']]
           });       
-        const length = count[0].count;
+        const length = Number(count[0].count);
 
         const page = parseInt(req.query.page) || 1;
         const users = await User.findAll({
