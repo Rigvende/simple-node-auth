@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
-require('jw-paginate');
+const paginate = require('jw-paginate');
 
 exports.getAll = async (req, res) => {
     try {
