@@ -3,17 +3,16 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
 
+const LIMIT = 5;
+
 exports.getAll = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        logger.info(page);
-        const pageSize = 5;
         const users = await User.findAll({
             order: [['id', 'ASC']],
-            limit: pageSize,
-            offset: (page - 1) * pageSize
+            limit: LIMIT,
+            offset: (page - 1) * LIMIT
         });
-        logger.info(users);
         res.send200({ users, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
