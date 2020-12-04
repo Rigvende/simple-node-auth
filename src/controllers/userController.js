@@ -9,8 +9,8 @@ exports.getAll = async (req, res) => {
         const pageSize = 5;
         const users = await User.findAll({
             order: [['id', 'ASC']],
-            limit: [[pageSize]],
-            offset: [[(page - 1) * pageSize]]
+            limit: pageSize,
+            offset: (page - 1) * pageSize
         });
         res.send200({ users, refresh: req.refresh });
     } catch (err) {
