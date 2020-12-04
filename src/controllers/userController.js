@@ -2,18 +2,25 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
+const sequelize = require('../dbConfig');
 
 const LIMIT = 5;
 
 exports.getAll = async (req, res) => {
+
     try {
+        const count = await User.findAll({
+            attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'count']]
+          });       
+        const length = count[0].count;
+
         const page = parseInt(req.query.page) || 1;
         const users = await User.findAll({
             order: [['id', 'ASC']],
             limit: LIMIT,
             offset: (page - 1) * LIMIT
         });
-        res.send200({ users, refresh: req.refresh });
+        res.send200({ users, limit: LIMIT, length, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
         res.send500();
