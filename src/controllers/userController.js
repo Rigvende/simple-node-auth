@@ -13,7 +13,7 @@ exports.getAll = async (req, res) => {
         const length = Number(count[0].count);
 
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.offset) || 5;
+        const limit = parseInt(req.query.limit) || 5;
         const users = await User.findAll({
             order: [['id', 'ASC']],
             limit,
