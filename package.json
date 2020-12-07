@@ -15,7 +15,6 @@
     "express-validator": "^6.6.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
-    "jw-paginate": "^1.0.4",
     "morgan": "~1.9.1",
     "pg": "^8.5.1",
     "postgres": "^1.0.2",
@@ -24,7 +23,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "concurrently": "^5.3.0",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.6"
   }
 }
