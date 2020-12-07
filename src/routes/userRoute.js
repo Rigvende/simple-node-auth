@@ -3,12 +3,13 @@ const router = express.Router();
 const userController = require('../controllers/userController.js');
 const validation = require('../validation/userValidation.js');
 const auth = require('../middleware/auth.middleware');
+const paginateUsers = require('../middleware/pagination.middleware');
 
 // route: '/users'
 
 router.post("/", validation.registrationValidation, userController.create);
 
-router.get("/", auth, userController.getAll);
+router.get("/", auth, paginateUsers, userController.getAll);
 
 router.get("/:id", auth, userController.findById);
 
