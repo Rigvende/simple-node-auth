@@ -3,15 +3,14 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
 
-exports.getAll = async (req, res) => {
+exports.getAll = (req, res) => {
     try {
-        const users = await User.findAll({ order: [['id', 'ASC']] });
-        return res.send200({ users, refresh: req.refresh });
+        const { users, limit, length, refresh } = req;
+        res.send200({ users, limit, length, refresh });  
     } catch (err) {
-        logger.error(`Cannot find users! ${err}`);
+        logger.error(`Something goes wrong. ${err}`);
         return res.send500();
     }
-};
 
 exports.create = async (req, res) => {
     try {
