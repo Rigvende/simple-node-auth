@@ -4,8 +4,6 @@ const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
 const sequelize = require('../dbConfig');
 
-const LIMIT = 5;
-
 exports.getAll = async (req, res) => {
 
     try {
@@ -15,12 +13,13 @@ exports.getAll = async (req, res) => {
         const length = Number(count[0].count);
 
         const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.offset) || 5;
         const users = await User.findAll({
             order: [['id', 'ASC']],
-            limit: LIMIT,
-            offset: (page - 1) * LIMIT
+            limit,
+            offset: (page - 1) * limit,
         });
-        res.send200({ users, limit: LIMIT, length, refresh: req.refresh });
+        res.send200({ users, limit, length, refresh: req.refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
         res.send500();
