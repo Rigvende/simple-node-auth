@@ -2,7 +2,6 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { logger } = require('../logger.js');
-const sequelize = require('../dbConfig');
 
 exports.getAll = async (req, res) => {
     const { users, limit, length, refresh } = req;
