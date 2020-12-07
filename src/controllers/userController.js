@@ -5,9 +5,9 @@ const { logger } = require('../logger.js');
 const sequelize = require('../dbConfig');
 
 exports.getAll = async (req, res) => {
-    const { users, limit, length } = res;
+    const { users, limit, length, refresh } = req;
     try {
-        res.send200({ users, limit, length, refresh: req.refresh });
+        res.send200({ users, limit, length, refresh });
     } catch (err) {
         logger.error(`Cannot find users! ${err}`);
         res.send500();

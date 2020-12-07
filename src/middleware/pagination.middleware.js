@@ -1,4 +1,4 @@
-const paginateUsers = (req, res, next) => {
+module.exports = async (req, res, next) => {
     const count = await User.findAll({
         attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'count']]
     });
@@ -11,10 +11,8 @@ const paginateUsers = (req, res, next) => {
         limit,
         offset: (page - 1) * limit,
     });
-    res.users = users;
-    res.limit = limit;
-    res.length = length;
+    req.users = users;
+    req.limit = limit;
+    req.length = length;
     return next();
 }
-
-module.exports = { paginateUsers }
