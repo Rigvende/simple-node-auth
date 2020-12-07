@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const sequelize = require('../dbConfig');
+const { logger } = require('../logger.js');
 
 module.exports = async (req, res, next) => {
     try {
