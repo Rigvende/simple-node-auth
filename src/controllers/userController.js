@@ -11,6 +11,7 @@ exports.getAll = (req, res) => {
         logger.error(`Something goes wrong. ${err}`);
         return res.send500();
     }
+};
 
 exports.create = async (req, res) => {
     try {
