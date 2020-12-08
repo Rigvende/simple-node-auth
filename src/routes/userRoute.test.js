@@ -30,19 +30,6 @@ describe("Testing userRoute", () => {
         agent.set('Authorization', `Bearer ${token}`);
     });
 
-    it("POST /users - already existed", async () => {
-        let userObj = {
-            'name': "Ken",
-            'age': 34,
-            'email': "000@gmail.com",
-            'password': "00dfalj0"
-        };
-        const res = await agent.post("/users").send(userObj);
-        expect(StatusCodes.BAD_REQUEST);
-        expect(res.text).toEqual("{\"errors\":[],\"message\":\"User with such email has already existed\"}");
-        expect(res).toHaveProperty('req');
-    });
-
     it("POST /users - success", async () => {
         let userObj = {
             'name': "Ken",
@@ -51,11 +38,24 @@ describe("Testing userRoute", () => {
             'password': "aaa"
         };
         const res = await agent.post("/users").send(userObj);
-        expect(StatusCodes.CREATED);
         id = JSON.parse(res.text).data.id;
         let actual = JSON.parse(res.text).data;
         expect(actual.name).toEqual("Ken");
         expect(actual.age).toEqual(34);
+        expect(StatusCodes.CREATED);
+    });
+
+    it("POST /users - already existed", async () => {
+        let userObj = {
+            'name': "Ken",
+            'age': 34,
+            'email': "aaa@gmail.com",
+            'password': "aaa"
+        };
+        const res = await agent.post("/users").send(userObj);
+        expect(res.text).toEqual("{\"errors\":[],\"message\":\"User with such email has already existed\"}");
+        expect(res).toHaveProperty('req');
+        expect(StatusCodes.BAD_REQUEST);
     });
 
     it("PATCH /users/id - success", async () => {
@@ -63,7 +63,23 @@ describe("Testing userRoute", () => {
             'name': "Ken",
             'age': 44
         };
-        const res = await agent.patch(`/users/${id}`).send(userObj);
+        await agent.patch(`/users/${id}`).send(userObj);
+        expect(StatusCodes.OK);
+    });
+
+    it("GET /users/id - success", async () => {
+        const res = await agent.get(`/users/${id}`);
+        let user = JSON.parse(res.text).data.user;
+        expect(user.age).not.toBe(34);
+        expect(user.age).toEqual(44);
+        expect(StatusCodes.OK);
+    });
+
+    it("GET /users - success", async () => {
+        const res = await agent.get("/users");
+        let users = JSON.parse(res.text).data.users;
+        let lastUser = users[users.length - 1];
+        expect(lastUser.id).toEqual(id);
         expect(StatusCodes.OK);
     });
 
@@ -72,17 +88,8 @@ describe("Testing userRoute", () => {
         expect(StatusCodes.OK);
     });
 
-    it("GET /users - success", async () => {
-        const res = await agent.get("/users");
-        expect(StatusCodes.OK);
-        let firstUser = JSON.parse(res.text).data.users[0];
-        expect(firstUser.id).toEqual(1);
-    });
-
-    it("GET /users/id - success", async () => {
-        const res = await agent.get(`/users/1`);
-        expect(StatusCodes.OK);
-        let user = JSON.parse(res.text).data.user;
-        expect(user.createdAt).toEqual("2020-11-26T13:13:34.084Z");
+    it("GET /users/id - not found", async () => {
+        await agent.get(`/users/${id}`);
+        expect(StatusCodes.BAD_REQUEST);
     });
 });
