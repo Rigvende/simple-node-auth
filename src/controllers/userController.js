@@ -44,6 +44,7 @@ exports.create = async (req, res) => {
 exports.findById = async (req, res) => {
     try {
         const { id } = req.params;
+        
         const user = await User.findOne({ where: { id } });
         if (user) {
             logger.info("User found");
