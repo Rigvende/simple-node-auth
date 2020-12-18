@@ -13,7 +13,7 @@ exports.getMainPage = (req, res) =>
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, rememberMe } = req.body;
         const { errors } = validationResult(req);
 
         if (errors.length > 0) {
@@ -36,7 +36,9 @@ exports.login = async (req, res) => {
             return res.send401("Invalid email/password");
         }
 
-        const refreshToken = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REFRESH_TIME) });
+        const refreshToken = rememberMe
+            ? jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REMEMBER_TIME) })
+            : jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REFRESH_TIME) });
         const token = jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_TIME) });
 
         await User.update({ token: refreshToken }, { where: { id } });
@@ -55,7 +57,7 @@ exports.logout = async (req, res) => {
         const refreshToken = checkedUser.token;
         const decoded = jwt.decode(refreshToken, JWT_SECRET);
         const time = parseInt((decoded.exp * 1000 - Date.now()) / 1000);
-   
+
         await invalidateToken(user.id, token, time);
         logger.info('Logout successful');
         return res.send200();

@@ -6,7 +6,7 @@ const { logger } = require('../logger.js');
 exports.getAll = (req, res) => {
     try {
         const { users, limit, length, refresh } = req;
-        res.send200({ users, limit, length, refresh });  
+        res.send200({ users, limit, length, refresh });
     } catch (err) {
         logger.error(`Something goes wrong. ${err}`);
         return res.send500();
@@ -44,9 +44,15 @@ exports.create = async (req, res) => {
 exports.findById = async (req, res) => {
     try {
         const { id } = req.params;
+        
         const user = await User.findOne({ where: { id } });
-        logger.info("User found");
-        return res.send200({ user, refresh: req.refresh });
+        if (user) {
+            logger.info("User found");
+            return res.send200({ user, refresh: req.refresh });
+        }
+
+        logger.warn("User not found");
+        return res.send400("User not found");
     } catch (err) {
         logger.error(`Cannot find user! ${err}`);
         return res.send500();
@@ -84,9 +90,14 @@ exports.delete = async (req, res) => {
             return res.send400(null, 'User cannot delete himself');
         }
 
-        await User.destroy({ where: { id } });
-        logger.info("User deleted successful");
-        return res.send200({ refresh: req.refresh });
+        const deleted = await User.destroy({ where: { id } });
+        if (deleted) {
+            logger.info("User deleted successful");
+            return res.send200({ refresh: req.refresh });
+        }
+
+        logger.warn("User not found for deleting");
+        return res.send400(null, 'User not found for deleting');
     } catch (err) {
         logger.error(`Cannot delete user! ${err}`);
         return res.send500();
