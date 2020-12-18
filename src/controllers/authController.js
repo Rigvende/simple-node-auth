@@ -36,8 +36,6 @@ exports.login = async (req, res) => {
             return res.send401("Invalid email/password");
         }
 
-        logger.info(rememberMe);
-
         const refreshToken = rememberMe
             ? jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REMEMBER_TIME) })
             : jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REFRESH_TIME) });
