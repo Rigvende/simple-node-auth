@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { logger } = require('../logger.js');
 const { invalidateToken } = require('../tokensBlackList');
 
-const { JWT_SECRET, JWT_TIME, JWT_REFRESH_TIME } = process.env;
+const { JWT_SECRET, JWT_TIME, JWT_REFRESH_TIME, JWT_REMEMBER_TIME } = process.env;
 
 exports.getMainPage = (req, res) =>
     res.send(`<h1>Hello from Simple-Node-Auth!</h1>`);
@@ -35,6 +35,8 @@ exports.login = async (req, res) => {
             logger.warn("Invalid email/password");
             return res.send401("Invalid email/password");
         }
+
+        logger.info(rememberMe);
 
         const refreshToken = rememberMe
             ? jwt.sign({ id }, JWT_SECRET, { expiresIn: Number(JWT_REMEMBER_TIME) })
