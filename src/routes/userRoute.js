@@ -5,8 +5,6 @@ const validation = require('../validation/userValidation.js');
 const auth = require('../middleware/auth.middleware');
 const paginateUsers = require('../middleware/pagination.middleware');
 
-// route: '/users'
-
 router.post("/", validation.registrationValidation, userController.create);
 
 router.get("/", auth, paginateUsers, userController.getAll);

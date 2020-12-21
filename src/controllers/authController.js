@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { logger } = require('../logger.js');
 const { invalidateToken } = require('../tokensBlackList');
+const mail = require('./mailController');
 
 const { JWT_SECRET, JWT_TIME, JWT_REFRESH_TIME, JWT_REMEMBER_TIME } = process.env;
 
@@ -53,7 +54,7 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
     const { token, user } = req;
     try {
-        const checkedUser = await User.findOne(({ where: { id: user.id } }));
+        const checkedUser = await User.findOne({ where: { id: user.id } });
         const refreshToken = checkedUser.token;
         const decoded = jwt.decode(refreshToken, JWT_SECRET);
         const time = parseInt((decoded.exp * 1000 - Date.now()) / 1000);
@@ -63,6 +64,45 @@ exports.logout = async (req, res) => {
         return res.send200();
     } catch (err) {
         logger.error(`Logout failed! ${err}`);
+        return res.send500();
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    const { email } = req;
+    try {
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            logger.warn("Invalid email");
+            return res.send401("Invalid email");
+        }
+
+        await mail.sendResetPasswordEmail(user);
+        logger.info('Mail sent successful');
+        return res.send200();
+    } catch (err) {
+        logger.error(`Mail sending failed! ${err}`);
+        return res.send500();
+    }
+};
+
+exports.changePassword = async (req, res) => {
+    const { password, email } = req;
+    const { id } = req.params;
+    try {
+        const user = await User.findOne({ where: { id, email } });  
+        
+        if (!user) {
+            logger.warn("Invalid id/email");
+            return res.send401("User not found");
+        }
+
+        await User.update({ password }, { where: { id } });
+        logger.info('Passport reset successful');
+        return res.send200();
+    } catch (err) {
+        logger.error(`Passport reset failed! ${err}`);
         return res.send500();
     }
 };
