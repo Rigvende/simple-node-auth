@@ -19,6 +19,7 @@ function sendEmail(message) {
 };
 
 exports.sendResetPasswordEmail = user => {
+    console.log(user);
     const email = NODE_ENV === 'production' ? user.email : MAIL_USER;
     const message = {
         from: MAIL_USER,
@@ -27,7 +28,7 @@ exports.sendResetPasswordEmail = user => {
         html: `
       <h3> Hello ${user.name} </h3>
       <p>Just one last step is laying ahead of you...</p>
-      <p>Enter your current email ${email} and new password after following this link: 
+      <p>Enter your current email and new password after following this link: 
       <a target="_" href="${DOMAIN}/change/${user.id}">Change password</a> </p>
       <p>Cheers,</p>
       <p>Your SimpleNodeAuth Team</p>

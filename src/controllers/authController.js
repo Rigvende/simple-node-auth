@@ -69,7 +69,7 @@ exports.logout = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-    const { email } = req;
+    const { email } = req.body;
     try {
         const user = await User.findOne({ where: { email } });
 
@@ -88,7 +88,7 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.changePassword = async (req, res) => {
-    const { password, email } = req;
+    const { password, email } = req.body;
     const { id } = req.params;
     try {
         const user = await User.findOne({ where: { id, email } });  
@@ -98,7 +98,9 @@ exports.changePassword = async (req, res) => {
             return res.send401("User not found");
         }
 
-        await User.update({ password }, { where: { id } });
+        const hashedPassword = await bcrypt.hash(password, 13);
+        await User.update({ password: hashedPassword }, { where: { id } });
+        
         logger.info('Passport reset successful');
         return res.send200();
     } catch (err) {
