@@ -1,11 +1,15 @@
 const nodemailer = require('nodemailer');
+const { logger } = require('../logger');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const { MAIL_PASSWORD, MAIL_USER, DOMAIN, MAIL_SERVICE} = process.env;
 
 function sendEmail(message) {
     return new Promise((res, rej) => {
+        logger.info(MAIL_USER + ' ' + MAIL_PASSWORD);
         const transporter = nodemailer.createTransport({
-            service: MAIL_SERVICE,
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
             auth: {
                 user: MAIL_USER,
                 pass: MAIL_PASSWORD
@@ -19,7 +23,6 @@ function sendEmail(message) {
 };
 
 exports.sendResetPasswordEmail = user => {
-    console.log(user);
     const email = NODE_ENV === 'production' ? user.email : MAIL_USER;
     const message = {
         from: MAIL_USER,
