@@ -5,7 +5,6 @@ const { MAIL_PASSWORD, MAIL_USER, DOMAIN, MAIL_SERVICE} = process.env;
 
 function sendEmail(message) {
     return new Promise((res, rej) => {
-        logger.info(MAIL_USER + ' ' + MAIL_PASSWORD);
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
@@ -23,16 +22,16 @@ function sendEmail(message) {
 };
 
 exports.sendResetPasswordEmail = user => {
-    const email = NODE_ENV === 'production' ? user.email : MAIL_USER;
+    const { email, name, id } = user;
     const message = {
         from: MAIL_USER,
         to: email,
         subject: 'SimpleNodeAuth - Change password',
         html: `
-      <h3> Hello ${user.name} </h3>
+      <h3> Hello ${name} </h3>
       <p>Just one last step is laying ahead of you...</p>
       <p>Enter your current email and new password after following this link: 
-      <a target="_" href="${DOMAIN}/change/${user.id}">Change password</a> </p>
+      <a target="_" href="${DOMAIN}/change/${id}">Change password</a> </p>
       <p>Cheers,</p>
       <p>Your SimpleNodeAuth Team</p>
     `
