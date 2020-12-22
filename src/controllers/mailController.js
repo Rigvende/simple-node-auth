@@ -5,16 +5,16 @@ const { MAIL_PASSWORD, MAIL_USER, DOMAIN, MAIL_SERVICE} = process.env;
 
 function sendEmail(message) {
     return new Promise((res, rej) => {
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
+        transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, 
             auth: {
                 user: MAIL_USER,
                 pass: MAIL_PASSWORD
             }
         });
-
+        
         transporter.sendMail(message, function (err, info) {
             err ? rej(err) : res(info);
         });
