@@ -70,6 +70,14 @@ exports.logout = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
     const { email } = req.body;
+
+    const { errors } = validationResult(req);
+
+    if (errors.length > 0) {
+        logger.warn("Incorrect email");
+        return res.send400(errors, "Incorrect email")
+    }
+
     try {
         const user = await User.findOne({ where: { email } });
 
@@ -90,9 +98,17 @@ exports.resetPassword = async (req, res) => {
 exports.changePassword = async (req, res) => {
     const { password, email } = req.body;
     const { id } = req.params;
+
+    const { errors } = validationResult(req);
+
+    if (errors.length > 0) {
+        logger.warn("Incorrect input data");
+        return res.send400(errors, "Incorrect input data")
+    }
+
     try {
-        const user = await User.findOne({ where: { id, email } });  
-        
+        const user = await User.findOne({ where: { id, email } });
+
         if (!user) {
             logger.warn("Invalid id/email");
             return res.send401("User not found");
@@ -100,7 +116,7 @@ exports.changePassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 13);
         await User.update({ password: hashedPassword }, { where: { id } });
-        
+
         logger.info('Passport reset successful');
         return res.send200();
     } catch (err) {

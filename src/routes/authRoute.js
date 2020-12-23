@@ -12,6 +12,6 @@ router.get("/logout", auth, authController.logout);
 
 router.post("/reset-pass", validation.emailValidation, authController.resetPassword);
 
-router.post("/change-pass/:id", validation.passwordValidation, authController.changePassword);
+router.post("/change-pass/:id", validation.loginValidation, authController.changePassword);
 
 module.exports = router;
