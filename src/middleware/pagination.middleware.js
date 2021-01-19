@@ -11,7 +11,11 @@ module.exports = async (req, res, next) => {
 
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
+        const username = req.query.name || null;
         const users = await User.findAll({
+            where: {
+                ['name']: username,
+              },
             order: [['id', 'ASC']],
             limit,
             offset: (page - 1) * limit,
